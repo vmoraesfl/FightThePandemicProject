@@ -1,3 +1,4 @@
+from scipy.integrate import odeint
 from scipy import interpolate
 import dash_table
 import mydcc
@@ -10,7 +11,6 @@ import pandas as pd
 import plotly.graph_objs as go
 import numpy as np
 pd.options.mode.chained_assignment = None  # default='warn'
-from scipy.integrate import odeint
 
 
 ############################################ the model ################################################
@@ -30,7 +30,7 @@ def deriv(y, t, r0_y_interpolated, gamma, sigma, N, p_I_to_C, p_C_to_D, Beds):
             return r0_y_interpolated[int(t)] / betaa(t) if not np.isnan(betaa(t)) else 0
         except:
             return r0_y_interpolated[-1] / betaa(t)
-            
+
     dSdt = -beta(t) * I * S / N
     dEdt = beta(t) * I * S / N - sigma * E
     dIdt = sigma * E - 1/12.0 * p_I_to_C * I - gamma * (1 - p_I_to_C) * I
@@ -43,48 +43,50 @@ def deriv(y, t, r0_y_interpolated, gamma, sigma, N, p_I_to_C, p_C_to_D, Beds):
     return dSdt, dEdt, dIdt, dCdt, dRdt, dDdt
 
 
-
 gamma = 1.0/9.0
 sigma = 1.0/3.0
+
 
 def logistic_R_0(t, R_0_start, k, x0, R_0_end):
     return (R_0_start-R_0_end) / (1 + np.exp(-k*(-t+x0))) + R_0_end
 
+
 def Model(initial_cases, initial_date, N, beds_per_100k, R_0_start, k, x0, R_0_end, p_I_to_C, p_C_to_D, s, r0_y_interpolated=None):
     days = 360
+
     def beta(t):
         return logistic_R_0(t, R_0_start, k, x0, R_0_end) * gamma
-    
+
     def Beds(t):
         beds_0 = beds_per_100k / 100_000 * N
         return beds_0 + s*beds_0*t  # 0.003
-
-
-    diff = int((np.datetime64("2020-01-01") - np.datetime64(initial_date)) / np.timedelta64(1, "D"))
+    diff = int((np.datetime64("2020-01-01") -
+                np.datetime64(initial_date)) / np.timedelta64(1, "D"))
     if diff > 0:
-        r0_y_interpolated = [r0_y_interpolated[0] for _ in range(diff-1)] + r0_y_interpolated
+        r0_y_interpolated = [r0_y_interpolated[0]
+                             for _ in range(diff-1)] + r0_y_interpolated
     elif diff < 0:
         r0_y_interpolated = r0_y_interpolated[(-diff):]
 
     last_date = np.datetime64(initial_date) + np.timedelta64(days-1, "D")
-    missing_days_r0 = int((last_date - np.datetime64("2020-09-01")) / np.timedelta64(1, "D"))
-    r0_y_interpolated += [r0_y_interpolated[-1] for _ in range(missing_days_r0+1)]
+    missing_days_r0 = int(
+        (last_date - np.datetime64("2020-09-01")) / np.timedelta64(1, "D"))
+    r0_y_interpolated += [r0_y_interpolated[-1]
+                          for _ in range(missing_days_r0+1)]
 
     y0 = N-initial_cases, initial_cases, 0.0, 0.0, 0.0, 0.0
     t = np.linspace(0, days, days)
     print(t)
     ret = odeint(deriv, y0, t, args=(r0_y_interpolated,
-                                        gamma, sigma, N, p_I_to_C, p_C_to_D, Beds))
+                                     gamma, sigma, N, p_I_to_C, p_C_to_D, Beds))
     S, E, I, C, R, D = ret.T
     R_0_over_time = r0_y_interpolated
     total_CFR = [0] + [100 * D[i] / sum(sigma*E[:i]) if sum(
         sigma*E[:i]) > 0 else 0 for i in range(1, len(t))]
     daily_CFR = [0] + [100 * ((D[i]-D[i-1]) / ((R[i]-R[i-1]) + (D[i]-D[i-1]))) if max(
         (R[i]-R[i-1]), (D[i]-D[i-1])) > 10 else 0 for i in range(1, len(t))]
-
-
-
-    dates = pd.date_range(start=np.datetime64(initial_date), periods=days, freq="D")
+    dates = pd.date_range(start=np.datetime64(
+        initial_date), periods=days, freq="D")
 
     return dates, S, E, I, C, R, D, R_0_over_time, total_CFR, daily_CFR, [Beds(i) for i in range(len(t))]
 
@@ -290,7 +292,6 @@ app.layout = dbc.Container(
 )
 
 
-
 ############################################ the dash app callbacks ################################################
 
 
@@ -300,7 +301,7 @@ app.layout = dbc.Container(
      dash.dependencies.Output('r0_graph', 'figure'),
      dash.dependencies.Output('deaths_graph', 'figure'),
      ],
-     
+
     [dash.dependencies.Input('submit-button-state', 'n_clicks')],
 
     [dash.dependencies.State('initial_cases', 'value'),
@@ -314,35 +315,42 @@ app.layout = dbc.Container(
      ]
 )
 
-
 def update_graph(_, initial_cases, initial_date, population, icu_beds, p_I_to_C, p_C_to_D, r0_data, r0_columns):
-    
+
     last_initial_date, last_population, last_icu_beds, last_p_I_to_C, last_p_C_to_D = "2020-01-15", 1_000_000, 5.0, 5.0, 50.0
     if not (initial_date and population and icu_beds and p_I_to_C and p_C_to_D):
         initial_date, population, icu_beds, p_I_to_C, p_C_to_D = last_initial_date, last_population, last_icu_beds, last_p_I_to_C, last_p_C_to_D
 
-
     r0_data_x = [datapoint["Date"] for datapoint in r0_data]
-    r0_data_y = [datapoint["R value"] if ((not np.isnan(datapoint["R value"])) and (datapoint["R value"] >= 0))  else 0 for datapoint in r0_data]
-    f = interpolate.interp1d([0, 1, 2, 3, 4, 5, 6, 7, 8], r0_data_y, kind='linear')
-    r0_x_dates = pd.date_range(start=np.datetime64("2020-01-01"), end=np.datetime64("2020-09-01"), freq="D")
+    r0_data_y = [datapoint["R value"] if ((not np.isnan(datapoint["R value"])) and (
+        datapoint["R value"] >= 0)) else 0 for datapoint in r0_data]
+    f = interpolate.interp1d(
+        [0, 1, 2, 3, 4, 5, 6, 7, 8], r0_data_y, kind='linear')
+    r0_x_dates = pd.date_range(start=np.datetime64(
+        "2020-01-01"), end=np.datetime64("2020-09-01"), freq="D")
     r0_y_interpolated = f(np.linspace(0, 8, num=len(r0_x_dates))).tolist()
 
-    dates, S, E, I, C, R, D, R_0_over_time, total_CFR, daily_CFR, B = Model(initial_cases, initial_date, population, icu_beds, 3.0, 0.01, 50, 2.3, float(p_I_to_C)/100, float(p_C_to_D)/100, 0.001, r0_y_interpolated)
+    dates, S, E, I, C, R, D, R_0_over_time, total_CFR, daily_CFR, B = Model(
+        initial_cases, initial_date, population, icu_beds, 3.0, 0.01, 50, 2.3, float(p_I_to_C)/100, float(p_C_to_D)/100, 0.001, r0_y_interpolated)
 
     return {  # return graph for compartments, graph for fatality rates, graph for reproduction rate, and graph for deaths over time
         'data': [
-            {'x': dates, 'y': S.astype(int), 'type': 'line', 'name': 'susceptible'},
-            {'x': dates, 'y': E.astype(int), 'type': 'line', 'name': 'exposed'},
-            {'x': dates, 'y': I.astype(int), 'type': 'line', 'name': 'infected'},
-            {'x': dates, 'y': C.astype(int), 'type': 'line', 'name': 'critical'},
-            {'x': dates, 'y': R.astype(int), 'type': 'line', 'name': 'recovered'},
+            {'x': dates, 'y': S.astype(
+                int), 'type': 'line', 'name': 'susceptible'},
+            {'x': dates, 'y': E.astype(
+                int), 'type': 'line', 'name': 'exposed'},
+            {'x': dates, 'y': I.astype(
+                int), 'type': 'line', 'name': 'infected'},
+            {'x': dates, 'y': C.astype(
+                int), 'type': 'line', 'name': 'critical'},
+            {'x': dates, 'y': R.astype(
+                int), 'type': 'line', 'name': 'recovered'},
             {'x': dates, 'y': D.astype(int), 'type': 'line', 'name': 'dead'},
         ],
         'layout': {
             'title': 'Compartments over time'
         }
-        }, {
+    }, {
         'data': [
             {'x': dates, 'y': daily_CFR, 'type': 'line',
                 'name': 'daily'},
@@ -351,26 +359,25 @@ def update_graph(_, initial_cases, initial_date, population, icu_beds, p_I_to_C,
         ],
         'layout': {
             'title': 'Fatality rate over time (%)',
-            }
-        }, {
+        }
+    }, {
         'data': [
             {'x': dates, 'y': R_0_over_time, 'type': 'line', 'name': 'susceptible'}
         ],
         'layout': {
             'title': 'Reproduction Rate R over time',
-            }
-        }, {
+        }
+    }, {
         'data': [
-            {'x': dates, 'y': [0] + [D[i]-D[i-1] for i in range(1, len(dates))], 'type': 'line', 'name': 'total'},
-            {'x': dates, 'y': [0] + [max(0, C[i-1]-B[i-1]) for i in range(1, len(dates))], 'type': 'line', 'name': 'due to overcapacity'}
+            {'x': dates, 'y': [0] + [D[i]-D[i-1]
+                                     for i in range(1, len(dates))], 'type': 'line', 'name': 'total'},
+            {'x': dates, 'y': [0] + [max(0, C[i-1]-B[i-1]) for i in range(
+                1, len(dates))], 'type': 'line', 'name': 'due to overcapacity'}
         ],
         'layout': {
             'title': 'Deaths per day'
         }
-        }
-
-
-
+    }
 
 
 
