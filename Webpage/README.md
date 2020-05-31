@@ -12,7 +12,6 @@ The Art Design was mainly produced with Photshop CC 2020.
 Additional Credits: [Font Awesome](fontawesome.com) & [Freepik](freepik.com)
 
 
-[Acess The Website](https://fightthepandemic.co/)
 
 ## Design
 The design employed in this website was thought to be as intuitive and functional as possible, in order to achieve the best **UI / UX** experience possible.
