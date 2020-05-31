@@ -21,5 +21,5 @@ We used linear gradients of dark blue in order to achieve a visually elegant sho
 
 
 
-#**Fight The Pandemic!**
+# **Fight The Pandemic!**
 
