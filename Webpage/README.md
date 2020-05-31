@@ -17,7 +17,9 @@ Additional Credits: [Font Awesome](fontawesome.com) & [Freepik](freepik.com)
 ## Design
 The design employed in this website was thought to be as intuitive and functional as possible, in order to achieve the best **UI / UX** experience possible.
 
+We used linear gradients of dark blue in order to achieve a visually elegant showcase of elements. Moreover, we tried to use the contrast between dark and bright between each section of the website, taking into account the general aesthetics of the website.
 
 
-**Fight The Pandemic!**
+
+#**Fight The Pandemic!**
 
