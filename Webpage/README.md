@@ -1,7 +1,7 @@
 # Fighting The Pandemic's Webpage
 This Directory contains the Source Code of the Website created to upload our project's model predictions and to make the data available online. This way, people in general can use the data to make better decisions and slow down the spread of the infection.
 
-## [Acess The Website](https://fightthepandemic.co/)
+**[Acess The Website](https://fightthepandemic.co/)
 
 
 ## Development Tools and References
