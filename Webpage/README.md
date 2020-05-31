@@ -19,5 +19,5 @@ The design employed in this website was thought to be as intuitive and functiona
 
 
 
-# Fight The Pandemic!
+**Fight The Pandemic!
 
