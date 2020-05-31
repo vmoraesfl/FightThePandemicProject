@@ -2,5 +2,8 @@
 ### This way, people in general, can use the data to make better decisions and slow down the spread of the infection. Fight The Pandemic!
 
 The Website was developed using HTML, CSS and JS tools.
+Credits: [Font Awesome](fontawesome.com)
+
+
 
 [Acess The Website](https://fightthepandemic.co/)
