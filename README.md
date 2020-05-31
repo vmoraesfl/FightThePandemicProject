@@ -6,6 +6,7 @@ In this part of the project, we will create a model to forecast the pandemic beh
 Desenvolveremos um modelo que é uma variação do SIR(Susceptible-Infected-Recovered) para permitir uma melhor adequação as características do COVID19. Para uma melhor compreensão dos conceitos e equações SIR que serão usadas, recomendamos o estudo da literatura indicada. 
 
 The step by step creation of the model is documented in the python notebook.
+The charts can be generated using plot.py .
 
 
 #### Bibliography: https://towardsdatascience.com/infectious-disease-modelling-part-i-understanding-sir-28d60e29fdfc
