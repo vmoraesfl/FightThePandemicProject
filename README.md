@@ -6,11 +6,11 @@ The Away from the Crowd Team is tackling the [HUMAN FACTORS](https://covid19.spa
 
 ## The Problem
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam mollis tellus at mi mollis volutpat. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Quisque malesuada suscipit urna, id placerat massa commodo at. Nunc auctor dui risus, interdum suscipit diam varius eget. Phasellus sed felis eget elit.
+With the rapidly increasing of COVID-19 cases around the globe, governments and authorities need reliable data to make fast and acerted decisions to mitigate deaths and slow down the spread of the infection. 
 
 ## Our Solution
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam mollis tellus at mi mollis volutpat. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Quisque malesuada suscipit urna, id placerat massa commodo at. Nunc auctor dui risus, interdum suscipit diam varius eget. Phasellus sed felis eget elit.Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam mollis tellus at mi mollis volutpat. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Quisque malesuada suscipit urna, id placerat massa commodo at. Nunc auctor dui risus, interdum suscipit diam varius eget. Phasellus sed felis eget elit.
+We used transportation and touristic routes, population density and the use of light data, extracted from Nasa's database, in order to discover the patterns of the disease, thus creating a model to forecast the infection behaviour. We also designed a web-platform to make this data visible and available to everyone, so authorities can use this information to make better decisions.
 
 ## Related Literature
 
