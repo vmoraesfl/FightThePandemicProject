@@ -4,7 +4,7 @@ This Directory contains the Source Code of the Website created to upload our pro
 **[Acess The Website](https://fightthepandemic.co/)**
 
 
-## Development Tools and References
+## Development Tools and Resources
 The Website was developed using HTML, CSS and JS.
 
 The Art Design was mainly produced with Photshop CC 2020.
