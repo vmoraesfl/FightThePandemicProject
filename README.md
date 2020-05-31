@@ -11,6 +11,7 @@ With the rapidly increasing of COVID-19 cases around the globe, governments and 
 ## Our Solution
 
 We used transportation and touristic routes, population density and the use of light data, extracted from Nasa's database, in order to discover the patterns of the disease, thus creating a model to forecast the infection behaviour. We also designed a web-platform to make this data visible and available to everyone, so authorities can use this information to make better decisions.
+[Acess The Website](https://fightthepandemic.co/)
 
 ## Related Literature
 
