@@ -18,7 +18,9 @@ The design employed in this website was thought to be as intuitive and functiona
 
 We used linear gradients of dark blue in order to achieve a visually elegant showcase of elements. Moreover, we tried to use the contrast between dark and bright between each section of the website, taking into account the general aesthetics of the website.
 
+## Homescreen Overview
 
+![Image](images/screenshot.png)
 
 # **Fight The Pandemic!**
 
