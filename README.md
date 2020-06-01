@@ -14,7 +14,7 @@ We used transportation and touristic routes, population density and the use of l
 
 [Acess The Website](https://fightthepandemic.co/)
 
-[Video Pitch](https://www.youtube.com/watch?v=Bnj3-4rUons&feature=youtu.be)
+[Video Pitch](https://youtu.be/idRS3875TFw)
 
 ## Related Literature
 
